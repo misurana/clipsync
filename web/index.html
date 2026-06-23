@@ -5,9 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ClipSync</title>
   <link rel="stylesheet" href="style.css" />
-
-  <!-- QR code GENERATOR (replaces scanner — Android now does the scanning) -->
-  <script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <!-- qrcode.js — renders QR into a div as <img> or <canvas> -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 
@@ -20,9 +19,9 @@
       </div>
       <p class="subtitle">Scan this QR code with your Android phone to pair.</p>
 
-      <!-- QR code renders here -->
+      <!-- qrcode.js renders an <img> tag inside this div -->
       <div class="qr-wrapper">
-        <canvas id="qr-canvas"></canvas>
+        <div id="qr-container"></div>
       </div>
 
       <p id="pairing-status" class="pairing-status" aria-live="polite">
@@ -35,7 +34,7 @@
            3. Point your camera at the code above.</p>
       </div>
 
-      <button id="btn-unpair-pairing" class="btn btn-ghost btn-sm">
+      <button id="btn-new-qr" class="btn btn-ghost btn-sm">
         🔄 Generate new QR
       </button>
     </div>
@@ -53,14 +52,11 @@
         <span id="status-dot" class="status-dot offline" aria-hidden="true"></span>
         <span id="status-label" class="status-label">Offline</span>
       </div>
-      <button id="btn-unpair" class="btn btn-ghost btn-sm" title="Unpair device">
-        Unpair
-      </button>
+      <button id="btn-unpair" class="btn btn-ghost btn-sm">Unpair</button>
     </header>
 
     <main class="main-content">
 
-      <!-- From Phone Panel -->
       <section class="panel" aria-labelledby="from-phone-title">
         <h2 id="from-phone-title" class="panel-title">📱 Last synced from Phone</h2>
         <div class="clipboard-display" aria-live="polite">
@@ -72,7 +68,6 @@
         </button>
       </section>
 
-      <!-- Send to Phone Panel -->
       <section class="panel" aria-labelledby="send-phone-title">
         <h2 id="send-phone-title" class="panel-title">💻 Send text to Phone</h2>
         <textarea
@@ -82,9 +77,7 @@
           rows="4"
           aria-label="Text to send to phone"
         ></textarea>
-        <button id="btn-send" class="btn btn-primary">
-          Send to Phone
-        </button>
+        <button id="btn-send" class="btn btn-primary">Send to Phone</button>
       </section>
 
     </main>

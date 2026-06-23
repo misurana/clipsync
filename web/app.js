@@ -1,13 +1,13 @@
 /**
  * ClipSync – Main App Logic
- * NEW FLOW: Web app generates Room ID + AES key + QR code.
+ * Web app generates Room ID + AES key + QR code.
  * Android app scans the QR to pair.
  */
 
-import { encrypt, decrypt, generateKey, bufferToBase64 } from './crypto.js';
+import { encrypt, decrypt, generateKey } from './crypto.js';
 import { initFirebase, pushClipboard, listenClipboard, listenConnectionState } from './firebase.js';
 
-// ─── Firebase config (hardcoded — same project for all users) ─────────────────
+// ─── Firebase config ──────────────────────────────────────────────────────────
 const FIREBASE_CONFIG = {
   apiKey:            "AIzaSyD6DXGNHKCfipyCdIiBFEVI4ad_Qb7ubiQ",
   authDomain:        "copynex-9d170.firebaseapp.com",
@@ -19,97 +19,116 @@ const FIREBASE_CONFIG = {
 };
 
 // ─── Storage Keys ─────────────────────────────────────────────────────────────
-const STORAGE_ROOM = 'clipsync_room';
-const STORAGE_KEY  = 'clipsync_key';
+const STORAGE_ROOM   = 'clipsync_room';
+const STORAGE_KEY    = 'clipsync_key';
+const STORAGE_PAIRED = 'clipsync_paired'; // only set after Android confirms scan
 
 // ─── State ────────────────────────────────────────────────────────────────────
 let roomId        = null;
 let encKey        = null;
 let lastFromPhone = null;
+let firebaseReady = false;
 
 // ─── DOM refs ─────────────────────────────────────────────────────────────────
 let pairingScreen, mainScreen;
-let qrCanvas, pairingStatus, btnUnpairFromPairing;
+let qrContainer, pairingStatus, btnNewQr;
 let lastTextEl, lastTsEl, btnCopyToLaptop;
 let sendTextArea, btnSend;
 let statusDot, statusLabel, btnUnpair;
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
-  pairingScreen       = document.getElementById('pairing-screen');
-  mainScreen          = document.getElementById('main-screen');
-  qrCanvas            = document.getElementById('qr-canvas');
-  pairingStatus       = document.getElementById('pairing-status');
-  btnUnpairFromPairing = document.getElementById('btn-unpair-pairing');
-  lastTextEl          = document.getElementById('last-text');
-  lastTsEl            = document.getElementById('last-ts');
-  btnCopyToLaptop     = document.getElementById('btn-copy-laptop');
-  sendTextArea        = document.getElementById('send-textarea');
-  btnSend             = document.getElementById('btn-send');
-  statusDot           = document.getElementById('status-dot');
-  statusLabel         = document.getElementById('status-label');
-  btnUnpair           = document.getElementById('btn-unpair');
+  pairingScreen   = document.getElementById('pairing-screen');
+  mainScreen      = document.getElementById('main-screen');
+  qrContainer     = document.getElementById('qr-container');
+  pairingStatus   = document.getElementById('pairing-status');
+  btnNewQr        = document.getElementById('btn-new-qr');
+  lastTextEl      = document.getElementById('last-text');
+  lastTsEl        = document.getElementById('last-ts');
+  btnCopyToLaptop = document.getElementById('btn-copy-laptop');
+  sendTextArea    = document.getElementById('send-textarea');
+  btnSend         = document.getElementById('btn-send');
+  statusDot       = document.getElementById('status-dot');
+  statusLabel     = document.getElementById('status-label');
+  btnUnpair       = document.getElementById('btn-unpair');
 
   btnCopyToLaptop.addEventListener('click', copyToLaptop);
   btnSend.addEventListener('click', sendToPhone);
   btnUnpair.addEventListener('click', unpair);
-  btnUnpairFromPairing?.addEventListener('click', unpair);
+  btnNewQr.addEventListener('click', startFreshPairing);
 
-  // Check existing pairing
+  // Only go to main screen if phone has previously confirmed pairing
+  const paired = localStorage.getItem(STORAGE_PAIRED) === 'true';
   const savedRoom = localStorage.getItem(STORAGE_ROOM);
   const savedKey  = localStorage.getItem(STORAGE_KEY);
 
-  if (savedRoom && savedKey) {
+  if (paired && savedRoom && savedKey) {
     roomId = savedRoom;
     encKey = savedKey;
     connectAndShow();
   } else {
-    await generateAndShowQR();
+    // Always show QR on first visit or if not confirmed paired
+    await startFreshPairing();
   }
 });
 
 // ─── QR Generation ────────────────────────────────────────────────────────────
-async function generateAndShowQR() {
-  showPairingScreen();
+async function startFreshPairing() {
+  // Clear old pairing state
+  localStorage.removeItem(STORAGE_PAIRED);
 
-  // Generate new room ID and AES-256 key
+  showPairingScreen();
+  pairingStatus.textContent = 'Generating QR code…';
+  qrContainer.innerHTML = '';
+
+  // Generate new room + key every time
   roomId = generateRoomId();
   encKey = await generateKey();
 
-  // Persist immediately so Android can connect as soon as it scans
   localStorage.setItem(STORAGE_ROOM, roomId);
   localStorage.setItem(STORAGE_KEY, encKey);
 
-  // QR payload: everything Android needs
   const qrData = JSON.stringify({
     room:     roomId,
     key:      encKey,
     fbConfig: FIREBASE_CONFIG
   });
 
-  // Render QR code onto canvas using qrcode.js (loaded via CDN)
-  pairingStatus.textContent = 'Scan this QR code with your ClipSync Android app';
-  QRCode.toCanvas(qrCanvas, qrData, {
-    width:           280,
-    margin:          2,
-    color: { dark: '#111827', light: '#ffffff' }
-  }, (err) => {
-    if (err) {
-      pairingStatus.textContent = 'QR generation failed: ' + err.message;
+  // Use qrcode.js — creates an <img> inside qrContainer
+  try {
+    new QRCode(qrContainer, {
+      text:          qrData,
+      width:         260,
+      height:        260,
+      colorDark:     '#000000',
+      colorLight:    '#ffffff',
+      correctLevel:  QRCode.CorrectLevel.M
+    });
+    pairingStatus.textContent = 'Scan this QR code with your ClipSync Android app';
+  } catch (e) {
+    pairingStatus.textContent = 'QR generation failed. Try refreshing.';
+    console.error('QR error:', e);
+    return;
+  }
+
+  // Connect to Firebase and listen — when Android scans & pushes, advance to main
+  startFirebaseListenerForPairing();
+}
+
+function startFirebaseListenerForPairing() {
+  if (!firebaseReady) {
+    try {
+      initFirebase(FIREBASE_CONFIG, roomId);
+      firebaseReady = true;
+    } catch (e) {
+      console.error('Firebase init failed:', e);
     }
-  });
+  }
 
-  // Also connect to Firebase now and wait for Android to join
-  initFirebase(FIREBASE_CONFIG, roomId);
-  listenConnectionState(
-    () => setStatus(true),
-    () => setStatus(false)
-  );
-
-  // When Android scans and pushes first entry, auto-advance to main screen
   listenClipboard((data) => {
     if (data.from === 'android') {
-      // Android has connected — move to main UI
+      // Android has connected — mark as paired and show main screen
+      localStorage.setItem(STORAGE_PAIRED, 'true');
       connectAndShow();
     }
   });
@@ -122,12 +141,13 @@ function generateRoomId() {
     .join('');
 }
 
-// ─── Connect & show main UI ───────────────────────────────────────────────────
+// ─── Main screen ──────────────────────────────────────────────────────────────
 function connectAndShow() {
-  try {
-    initFirebase(FIREBASE_CONFIG, roomId);
-  } catch (e) {
-    // already initialized — ignore
+  if (!firebaseReady) {
+    try {
+      initFirebase(FIREBASE_CONFIG, roomId);
+      firebaseReady = true;
+    } catch (e) { /* already init */ }
   }
 
   showMainScreen();
@@ -149,17 +169,18 @@ function connectAndShow() {
   });
 }
 
-// ─── Unpair ───────────────────────────────────────────────────────────────────
 async function unpair() {
   localStorage.removeItem(STORAGE_ROOM);
   localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(STORAGE_PAIRED);
   roomId = null;
   encKey = null;
   lastFromPhone = null;
-  await generateAndShowQR();
+  firebaseReady = false;
+  await startFreshPairing();
 }
 
-// ─── Screen switching ─────────────────────────────────────────────────────────
+// ─── UI helpers ───────────────────────────────────────────────────────────────
 function showPairingScreen() {
   pairingScreen.classList.remove('hidden');
   mainScreen.classList.add('hidden');
@@ -170,7 +191,6 @@ function showMainScreen() {
   mainScreen.classList.remove('hidden');
 }
 
-// ─── Main UI actions ──────────────────────────────────────────────────────────
 function displayLastFromPhone(text, ts) {
   lastTextEl.classList.remove('placeholder');
   lastTextEl.textContent = text;
@@ -192,10 +212,8 @@ async function copyToLaptop() {
 async function sendToPhone() {
   const text = sendTextArea.value.trim();
   if (!text) return;
-
   btnSend.disabled = true;
   btnSend.textContent = 'Sending…';
-
   try {
     const payload = await encrypt(text, encKey);
     await pushClipboard(payload, 'web');
@@ -210,7 +228,7 @@ async function sendToPhone() {
 }
 
 function setStatus(online) {
-  statusDot.className    = online ? 'status-dot online' : 'status-dot offline';
+  statusDot.className     = online ? 'status-dot online' : 'status-dot offline';
   statusLabel.textContent = online ? 'Connected' : 'Offline';
 }
 

@@ -97,15 +97,23 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 12px;
+  padding: 16px;
   background: #ffffff;
   border-radius: 12px;
   border: 1px solid var(--color-border);
 }
 
-.qr-wrapper canvas {
+/* qrcode.js renders an img inside #qr-container */
+#qr-container {
+  line-height: 0;
+}
+
+#qr-container img,
+#qr-container canvas {
   display: block;
   border-radius: 4px;
+  width: 260px !important;
+  height: 260px !important;
 }
 
 .pairing-status {
