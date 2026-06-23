@@ -22,15 +22,15 @@ class PairingManager(context: Context) {
         private const val KEY_ROOM_ID = "roomId"
         private const val KEY_ENC_KEY = "encKey"
 
-        /** Firebase project config — replace with real values from Firebase Console */
+        /** Firebase project config for CopyNex */
         private val FIREBASE_CONFIG = mapOf(
-            "apiKey"            to "YOUR_API_KEY",
-            "authDomain"        to "YOUR_PROJECT_ID.firebaseapp.com",
-            "databaseURL"       to "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
-            "projectId"         to "YOUR_PROJECT_ID",
-            "storageBucket"     to "YOUR_PROJECT_ID.appspot.com",
-            "messagingSenderId" to "YOUR_SENDER_ID",
-            "appId"             to "YOUR_APP_ID"
+            "apiKey"            to "AIzaSyD6DXGNHKCfipyCdIiBFEVI4ad_Qb7ubiQ",
+            "authDomain"        to "copynex-9d170.firebaseapp.com",
+            "databaseURL"       to "https://copynex-9d170-default-rtdb.firebaseio.com",
+            "projectId"         to "copynex-9d170",
+            "storageBucket"     to "copynex-9d170.firebasestorage.app",
+            "messagingSenderId" to "735325964151",
+            "appId"             to "1:735325964151:web:bf79478d3a80c4edc80372"
         )
     }
 
