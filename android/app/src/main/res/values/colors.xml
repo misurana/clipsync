@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App base colors -->
+    <color name="background">#F5F5F7</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="text_primary">#111827</color>
+    <color name="text_secondary">#6B7280</color>
+    <color name="primary">#2563EB</color>
+    <color name="primary_dark">#1D4ED8</color>
+
+    <!-- QR code display background -->
+    <color name="qr_bg">#FFFFFF</color>
+
+    <!-- Keyboard colors -->
+    <color name="keyboard_bg">#D1D5DB</color>
+    <color name="key_bg">#FFFFFF</color>
+    <color name="key_bg_pressed">#ADB5BD</color>
+    <color name="function_key_bg">#ADB5BD</color>
+    <color name="key_text">#111827</color>
+
+    <!-- Toolbar colors -->
+    <color name="toolbar_bg">#1F2937</color>
+    <color name="toolbar_text">#F9FAFB</color>
+    <color name="toolbar_btn_bg">#374151</color>
+
+    <!-- Status colors -->
+    <color name="status_online">#22C55E</color>
+    <color name="status_offline">#EF4444</color>
+</resources>

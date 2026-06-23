@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ClipSync keyboard layout.
+  Top toolbar row: sync status | paste-from-laptop | settings
+  Below: QWERTY rows
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/keyboard_bg">
+
+    <!-- ── Toolbar Row ───────────────────────────────────────────────────── -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/toolbar_bg"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:gravity="center_vertical">
+
+        <!-- Sync status label -->
+        <TextView
+            android:id="@+id/tv_sync_status"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="ClipSync"
+            android:textSize="11sp"
+            android:textColor="@color/toolbar_text" />
+
+        <!-- Paste from Laptop button -->
+        <Button
+            android:id="@+id/btn_paste_from_laptop"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:text="📋 Paste"
+            android:textSize="11sp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:enabled="false"
+            style="@style/Widget.ClipSync.ToolbarButton" />
+
+        <!-- Settings shortcut -->
+        <Button
+            android:id="@+id/btn_settings"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:text="⚙"
+            android:textSize="14sp"
+            android:layout_marginStart="4dp"
+            style="@style/Widget.ClipSync.ToolbarButton" />
+
+    </LinearLayout>
+
+    <!-- ── Keys Container (QWERTY rows) ─────────────────────────────────── -->
+    <LinearLayout
+        android:id="@+id/keyboard_keys_container"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp">
+
+        <!-- Row 1: Q W E R T Y U I O P -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp">
+
+            <Button android:tag="q" style="@style/Widget.ClipSync.Key" android:text="q" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" />
+            <Button android:tag="w" style="@style/Widget.ClipSync.Key" android:text="w" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" />
+            <Button android:tag="e" style="@style/Widget.ClipSync.Key" android:text="e" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" />
+            <Button android:tag="r" style="@style/Widget.ClipSync.Key" android:text="r" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" />
+            <Button android:tag="t" style="@style/Widget.ClipSync.Key" android:text="t" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" />
+            <Button android:tag="y" style="@style/Widget.ClipSync.Key" android:text="y" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" />
+            <Button android:tag="u" style="@style/Widget.ClipSync.Key" android:text="u" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" />
+            <Button android:tag="i" style="@style/Widget.ClipSync.Key" android:text="i" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" />
+            <Button android:tag="o" style="@style/Widget.ClipSync.Key" android:text="o" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" />
+            <Button android:tag="p" style="@style/Widget.ClipSync.Key" android:text="p" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" />
+
+        </LinearLayout>
+
+        <!-- Row 2: A S D F G H J K L -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:paddingStart="5%"
+            android:paddingEnd="5%">
+
+            <Button android:tag="a" style="@style/Widget.ClipSync.Key" android:text="a" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" />
+            <Button android:tag="s" style="@style/Widget.ClipSync.Key" android:text="s" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" />
+            <Button android:tag="d" style="@style/Widget.ClipSync.Key" android:text="d" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" />
+            <Button android:tag="f" style="@style/Widget.ClipSync.Key" android:text="f" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" />
+            <Button android:tag="g" style="@style/Widget.ClipSync.Key" android:text="g" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" />
+            <Button android:tag="h" style="@style/Widget.ClipSync.Key" android:text="h" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" />
+            <Button android:tag="j" style="@style/Widget.ClipSync.Key" android:text="j" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" />
+            <Button android:tag="k" style="@style/Widget.ClipSync.Key" android:text="k" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" />
+            <Button android:tag="l" style="@style/Widget.ClipSync.Key" android:text="l" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" />
+
+        </LinearLayout>
+
+        <!-- Row 3: SHIFT Z X C V B N M DEL -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp">
+
+            <Button android:tag="SHIFT" style="@style/Widget.ClipSync.FunctionKey" android:text="⇧" android:layout_width="0dp" android:layout_weight="1.5" android:layout_height="44dp" />
+            <Button android:tag="z" style="@style/Widget.ClipSync.Key" android:text="z" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" />
+            <Button android:tag="x" style="@style/Widget.ClipSync.Key" android:text="x" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" />
+            <Button android:tag="c" style="@style/Widget.ClipSync.Key" android:text="c" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" />
+            <Button android:tag="v" style="@style/Widget.ClipSync.Key" android:text="v" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" />
+            <Button android:tag="b" style="@style/Widget.ClipSync.Key" android:text="b" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" />
+            <Button android:tag="n" style="@style/Widget.ClipSync.Key" android:text="n" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" />
+            <Button android:tag="m" style="@style/Widget.ClipSync.Key" android:text="m" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" />
+            <Button android:tag="DEL" style="@style/Widget.ClipSync.FunctionKey" android:text="⌫" android:layout_width="0dp" android:layout_weight="1.5" android:layout_height="44dp" />
+
+        </LinearLayout>
+
+        <!-- Row 4: ?123  SPACE  ENTER -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button android:tag="?123" style="@style/Widget.ClipSync.FunctionKey" android:text="?123" android:layout_width="0dp" android:layout_weight="2" android:layout_height="44dp" />
+            <Button android:tag="SPACE" style="@style/Widget.ClipSync.SpaceKey" android:text="space" android:layout_width="0dp" android:layout_weight="5" android:layout_height="44dp" />
+            <Button android:tag="ENTER" style="@style/Widget.ClipSync.FunctionKey" android:text="↵" android:layout_width="0dp" android:layout_weight="2" android:layout_height="44dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

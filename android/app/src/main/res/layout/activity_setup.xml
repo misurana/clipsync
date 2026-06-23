@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="24dp"
+        android:gravity="center_horizontal">
+
+        <!-- App title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📋 ClipSync"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Scan this QR code with the ClipSync web app to pair your devices."
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="24dp" />
+
+        <!-- QR Code -->
+        <ImageView
+            android:id="@+id/iv_qr_code"
+            android:layout_width="280dp"
+            android:layout_height="280dp"
+            android:contentDescription="Pairing QR code"
+            android:background="@color/qr_bg"
+            android:padding="12dp" />
+
+        <!-- Room ID label -->
+        <TextView
+            android:id="@+id/tv_room_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Room ID: ——"
+            android:textSize="13sp"
+            android:textColor="@color/text_secondary"
+            android:fontFamily="monospace"
+            android:layout_marginTop="12dp" />
+
+        <!-- Enable keyboard button -->
+        <Button
+            android:id="@+id/btn_enable_keyboard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Enable ClipSync Keyboard"
+            android:layout_marginTop="28dp" />
+
+        <!-- Regenerate pairing -->
+        <Button
+            android:id="@+id/btn_regenerate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Generate New Pairing"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_marginTop="8dp" />
+
+        <!-- Instructions -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1. Open the ClipSync web app on your laptop.\n2. Tap &#34;Scan QR Code&#34; and point the camera here.\n3. Set ClipSync as your default keyboard in Settings."
+            android:textSize="13sp"
+            android:textColor="@color/text_secondary"
+            android:lineSpacingMultiplier="1.5"
+            android:background="@color/surface"
+            android:padding="16dp"
+            android:layout_marginTop="24dp" />
+
+    </LinearLayout>
+
+</ScrollView>

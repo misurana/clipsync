@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.clipsync">
+
+    <!-- Network access for Firebase sync -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Required for clipboard monitoring in IME -->
+    <uses-permission android:name="android.permission.READ_CLIPBOARD_IN_BACKGROUND" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.ClipSync">
+
+        <!-- Setup / Pairing Activity (launcher) -->
+        <activity
+            android:name=".ui.SetupActivity"
+            android:exported="true"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- IME Service -->
+        <service
+            android:name=".keyboard.ClipSyncIMEService"
+            android:exported="true"
+            android:label="@string/ime_name"
+            android:permission="android.permission.BIND_INPUT_METHOD">
+            <intent-filter>
+                <action android:name="android.view.InputMethod" />
+            </intent-filter>
+            <meta-data
+                android:name="android.view.im"
+                android:resource="@xml/method" />
+        </service>
+
+    </application>
+
+</manifest>

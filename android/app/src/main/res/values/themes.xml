@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.ClipSync" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/primary</item>
+        <item name="android:windowBackground">@color/background</item>
+    </style>
+
+    <!-- Toolbar button in keyboard -->
+    <style name="Widget.ClipSync.ToolbarButton" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:background">@color/toolbar_btn_bg</item>
+        <item name="android:textColor">@color/toolbar_text</item>
+        <item name="android:layout_marginStart">4dp</item>
+    </style>
+
+    <!-- Standard QWERTY key -->
+    <style name="Widget.ClipSync.Key" parent="Widget.AppCompat.Button">
+        <item name="android:background">@color/key_bg</item>
+        <item name="android:textColor">@color/key_text</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:elevation">1dp</item>
+        <item name="android:padding">0dp</item>
+    </style>
+
+    <!-- Function keys (shift, del, enter, space) -->
+    <style name="Widget.ClipSync.FunctionKey" parent="Widget.ClipSync.Key">
+        <item name="android:background">@color/function_key_bg</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <!-- Space bar -->
+    <style name="Widget.ClipSync.SpaceKey" parent="Widget.ClipSync.Key">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+</resources>
