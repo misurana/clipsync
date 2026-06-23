@@ -6,8 +6,8 @@
   <title>ClipSync</title>
   <link rel="stylesheet" href="style.css" />
 
-  <!-- html5-qrcode for QR camera scanning -->
-  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <!-- QR code GENERATOR (replaces scanner — Android now does the scanning) -->
+  <script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js"></script>
 </head>
 <body>
 
@@ -18,27 +18,32 @@
         <span class="logo-icon">📋</span>
         <h1>ClipSync</h1>
       </div>
-      <p class="subtitle">Pair your Android phone to start syncing your clipboard.</p>
+      <p class="subtitle">Scan this QR code with your Android phone to pair.</p>
 
-      <div id="qr-reader"></div>
+      <!-- QR code renders here -->
+      <div class="qr-wrapper">
+        <canvas id="qr-canvas"></canvas>
+      </div>
 
-      <button id="btn-start-scan" class="btn btn-primary">
-        📷 Scan QR Code
-      </button>
-
-      <p id="pairing-status" class="pairing-status" aria-live="polite"></p>
+      <p id="pairing-status" class="pairing-status" aria-live="polite">
+        Generating QR code…
+      </p>
 
       <div class="pairing-help">
-        <p>Open the <strong>ClipSync</strong> app on your Android phone,<br />
-           then tap <strong>Show QR Code</strong> to display the pairing code.</p>
+        <p>1. Open the <strong>ClipSync</strong> app on your Android phone.<br />
+           2. Tap <strong>Scan QR Code</strong>.<br />
+           3. Point your camera at the code above.</p>
       </div>
+
+      <button id="btn-unpair-pairing" class="btn btn-ghost btn-sm">
+        🔄 Generate new QR
+      </button>
     </div>
   </div>
 
   <!-- ── MAIN SCREEN ──────────────────────────────────────────────────── -->
   <div id="main-screen" class="screen hidden">
 
-    <!-- Header -->
     <header class="app-header">
       <div class="header-brand">
         <span class="logo-icon">📋</span>
@@ -57,12 +62,10 @@
 
       <!-- From Phone Panel -->
       <section class="panel" aria-labelledby="from-phone-title">
-        <h2 id="from-phone-title" class="panel-title">
-          📱 Last synced from Phone
-        </h2>
+        <h2 id="from-phone-title" class="panel-title">📱 Last synced from Phone</h2>
         <div class="clipboard-display" aria-live="polite">
           <p id="last-text" class="clip-text placeholder">Nothing received yet…</p>
-          <p id="last-ts"   class="clip-ts"></p>
+          <p id="last-ts" class="clip-ts"></p>
         </div>
         <button id="btn-copy-laptop" class="btn btn-primary" disabled>
           Copy to Clipboard
@@ -71,9 +74,7 @@
 
       <!-- Send to Phone Panel -->
       <section class="panel" aria-labelledby="send-phone-title">
-        <h2 id="send-phone-title" class="panel-title">
-          💻 Send text to Phone
-        </h2>
+        <h2 id="send-phone-title" class="panel-title">💻 Send text to Phone</h2>
         <textarea
           id="send-textarea"
           class="send-textarea"
@@ -89,7 +90,6 @@
     </main>
   </div>
 
-  <!-- App entry point (ES module) -->
   <script type="module" src="app.js"></script>
 </body>
 </html>

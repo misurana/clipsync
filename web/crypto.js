@@ -87,4 +87,18 @@ async function decrypt(payload, base64Key) {
   return new TextDecoder().decode(plaintext);
 }
 
-export { encrypt, decrypt, base64ToBuffer, bufferToBase64 };
+/**
+ * Generate a new 256-bit AES-GCM key and return it as a base64 string.
+ * @returns {Promise<string>} base64-encoded 32-byte key
+ */
+async function generateKey() {
+  const key = await crypto.subtle.generateKey(
+    { name: 'AES-GCM', length: 256 },
+    true,
+    ['encrypt', 'decrypt']
+  );
+  const raw = await crypto.subtle.exportKey('raw', key);
+  return bufferToBase64(raw);
+}
+
+export { encrypt, decrypt, generateKey, base64ToBuffer, bufferToBase64 };
